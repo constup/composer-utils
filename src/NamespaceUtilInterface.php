@@ -1,13 +1,14 @@
 <?php
 
+declare(strict_types = 1);
+
 namespace Constup\ComposerUtils;
 
-
-use Constup\Validator\Filesystem\FileValidatorInterface;
+use Constup\Validator\Filesystem\DirectoryValidatorInterface;
 use Exception;
 
 /**
- * Class NamespaceUtil
+ * Interface NamespaceUtil
  *
  * @package Constup\ComposerUtils
  */
@@ -22,17 +23,17 @@ interface NamespaceUtilInterface
     public function getComposerJsonFileUtil(): ComposerJsonFileUtilInterface;
 
     /**
-     * @return FileValidatorInterface
+     * @return DirectoryValidatorInterface
      */
-    public function getFileValidator(): FileValidatorInterface;
+    public function getDirectoryValidator(): DirectoryValidatorInterface;
 
     /**
      * @param string $filePath
      * @param object $composerJsonObject
      *
-     * @return string
      * @throws Exception
      *
+     * @return string
      */
     public function generateNamespaceFromPath(string $filePath, object $composerJsonObject): string;
 

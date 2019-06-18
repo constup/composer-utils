@@ -4,7 +4,7 @@ declare(strict_types = 1);
 
 namespace Constup\ComposerUtils;
 
-use Constup\Validator\Filesystem\FileValidatorInterface;
+use Constup\Validator\Filesystem\DirectoryValidatorInterface;
 use Exception;
 
 /**
@@ -16,19 +16,19 @@ class NamespaceUtil implements NamespaceUtilInterface
 {
     /** @var ComposerJsonFileUtilInterface */
     private $composerJsonFileUtil;
-    /** @var FileValidatorInterface */
-    private $fileValidator;
+    /** @var DirectoryValidatorInterface */
+    private $directoryValidator;
 
     /**
      * NamespaceUtil constructor.
      *
      * @param ComposerJsonFileUtilInterface $composerJsonFileUtil
-     * @param FileValidatorInterface        $fileValidator
+     * @param DirectoryValidatorInterface   $directoryValidator
      */
-    public function __construct(ComposerJsonFileUtilInterface $composerJsonFileUtil, FileValidatorInterface $fileValidator)
+    public function __construct(ComposerJsonFileUtilInterface $composerJsonFileUtil, DirectoryValidatorInterface $directoryValidator)
     {
         $this->composerJsonFileUtil = $composerJsonFileUtil;
-        $this->fileValidator = $fileValidator;
+        $this->directoryValidator = $directoryValidator;
     }
 
     /**
@@ -40,11 +40,11 @@ class NamespaceUtil implements NamespaceUtilInterface
     }
 
     /**
-     * @return FileValidatorInterface
+     * @return DirectoryValidatorInterface
      */
-    public function getFileValidator(): FileValidatorInterface
+    public function getDirectoryValidator(): DirectoryValidatorInterface
     {
-        return $this->fileValidator;
+        return $this->directoryValidator;
     }
 
     /**
@@ -58,9 +58,9 @@ class NamespaceUtil implements NamespaceUtilInterface
     public function generateNamespaceFromPath(string $filePath, object $composerJsonObject): string
     {
         $_file_path = realpath($filePath);
-        $fileValidation = $this->getFileValidator()->validateFile($_file_path);
-        if ($fileValidation !== FileValidatorInterface::OK) {
-            throw new Exception(__METHOD__ . ' : ' . $fileValidation);
+        $directoryValidation = $this->getDirectoryValidator()->validateDirectory($_file_path);
+        if ($directoryValidation !== DirectoryValidatorInterface::OK) {
+            throw new Exception(__METHOD__ . ' : ' . $directoryValidation);
         }
 
         $project_root = dirname($this->getComposerJsonFileUtil()->findComposerJSON($_file_path));
