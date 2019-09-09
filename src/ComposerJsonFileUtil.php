@@ -1,41 +1,24 @@
 <?php
 
-declare(strict_types=1);
+declare(strict_types = 1);
 
 namespace Constup\ComposerUtils;
 
-use Constup\Validator\Filesystem\DirectoryValidatorInterface;
 use Exception;
 
 /**
  * Class ComposerJsonFileUtil
  *
+ * Class for finding and fetching `composer.json` files.
+ *
  * @package Constup\ComposerUtils
  */
 class ComposerJsonFileUtil implements ComposerJsonFileUtilInterface
 {
-    /** @var DirectoryValidatorInterface */
-    private $directoryValidator;
-
     /**
-     * ComposerJsonFileUtil constructor.
-     * @param DirectoryValidatorInterface $directoryValidator
-     */
-    public function __construct(DirectoryValidatorInterface $directoryValidator)
-    {
-        $this->directoryValidator = $directoryValidator;
-    }
-
-    /**
-     * @return DirectoryValidatorInterface
-     */
-    public function getDirectoryValidator(): DirectoryValidatorInterface
-    {
-        return $this->directoryValidator;
-    }
-
-    /**
-     * @param string $startDirectory
+     * Absolute path of the directory containing a parent `composer.json` (relative to the `startDirectory`). If `composer.json` is not found, **`null`** is returned.
+     *
+     * @param string $startDirectory A directory where you want to start searching for `composer.json` from. The method will search the directory tree upwards up until the root.
      *
      * @throws Exception
      *
@@ -43,11 +26,6 @@ class ComposerJsonFileUtil implements ComposerJsonFileUtilInterface
      */
     public function findComposerJSON(string $startDirectory): ?string
     {
-        $directoryValidation = $this->getDirectoryValidator()->validateDirectory($startDirectory);
-        if ($directoryValidation !== DirectoryValidatorInterface::OK) {
-            throw new Exception(__METHOD__ . ' : ' . $directoryValidation);
-        }
-
         $_start_directory = rtrim($startDirectory, DIRECTORY_SEPARATOR) . DIRECTORY_SEPARATOR;
         $composerJSON = $_start_directory . 'composer.json';
         if (!file_exists($composerJSON)) {
@@ -62,7 +40,10 @@ class ComposerJsonFileUtil implements ComposerJsonFileUtilInterface
     }
 
     /**
-     * @param string $composerJsonFilePath
+     * Returns the contents of `composer.json` object in an object form. Sub-nodes aree then accessible as object's properties.
+     * A special case are nodes which have `-` sign in them (ex.: `autoload-dev`), since you can't directly access an object's property with the sign in it. To access the property, store the name of the node in a constant and access by using the constant (ex. `self::$AUTOLOAD_DEV`).
+     *
+     * @param string $composerJsonFilePath Absolute file path of a `composer.json` file.
      *
      * @return object
      */
@@ -72,7 +53,9 @@ class ComposerJsonFileUtil implements ComposerJsonFileUtilInterface
     }
 
     /**
-     * @param string $startDirectory
+     * This method simply uses `fetchComposerJSON` after `findComposerJSON`.
+     *
+     * @param string $startDirectory A directory where you want to start searching for `composer.json` from. The method will search the directory tree upwards up until the root.
      *
      * @throws Exception
      *
@@ -80,11 +63,6 @@ class ComposerJsonFileUtil implements ComposerJsonFileUtilInterface
      */
     public function findAndFetchComposerJson(string $startDirectory): object
     {
-        $directoryValidation = $this->getDirectoryValidator()->validateDirectory($startDirectory);
-        if ($directoryValidation !== DirectoryValidatorInterface::OK) {
-            throw new Exception(__METHOD__ . ' : ' . $directoryValidation);
-        }
-
         $composerJsonFilePath = $this->findComposerJSON($startDirectory);
         if ($composerJsonFilePath == null) {
             throw new Exception(__METHOD__ . '->' . 'composer.json file not found.');
@@ -92,5 +70,4 @@ class ComposerJsonFileUtil implements ComposerJsonFileUtilInterface
 
         return $this->fetchComposerJSONObject($composerJsonFilePath);
     }
-
 }

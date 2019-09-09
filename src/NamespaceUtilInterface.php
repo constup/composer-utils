@@ -4,7 +4,6 @@ declare(strict_types = 1);
 
 namespace Constup\ComposerUtils;
 
-use Constup\Validator\Filesystem\DirectoryValidatorInterface;
 use Exception;
 
 /**
@@ -18,31 +17,35 @@ interface NamespaceUtilInterface
     const AUTOLOAD_DEV = 'autoload-dev';
 
     /**
-     * @return ComposerJsonFileUtilInterface
+     * @return string
      */
-    public function getComposerJsonFileUtil(): ComposerJsonFileUtilInterface;
+    public function getProjectRootDirectory(): string;
 
     /**
-     * @return DirectoryValidatorInterface
+     * @return object
      */
-    public function getDirectoryValidator(): DirectoryValidatorInterface;
+    public function getComposerJsonObject(): object;
 
     /**
      * @param string $filePath
-     * @param object $composerJsonObject
      *
      * @throws Exception
      *
      * @return string
      */
-    public function generateNamespaceFromPath(string $filePath, object $composerJsonObject): string;
+    public function generateNamespaceFromPath(string $filePath): string;
 
     /**
      * @param string $namespace
-     * @param string $projectRootDirectory
-     * @param object $composerJsonObject
      *
      * @return string
      */
-    public function generatePathFromNamespace(string $namespace, string $projectRootDirectory, object $composerJsonObject): string;
+    public function generatePathFromNamespace(string $namespace): string;
+
+    /**
+     * @param string $namespace
+     *
+     * @return bool
+     */
+    public function fileWithFqcnExists(string $namespace): bool;
 }

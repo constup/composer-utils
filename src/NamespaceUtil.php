@@ -4,7 +4,6 @@ declare(strict_types = 1);
 
 namespace Constup\ComposerUtils;
 
-use Constup\Validator\Filesystem\DirectoryValidatorInterface;
 use Exception;
 
 /**
@@ -14,56 +13,52 @@ use Exception;
  */
 class NamespaceUtil implements NamespaceUtilInterface
 {
-    /** @var ComposerJsonFileUtilInterface */
-    private $composerJsonFileUtil;
-    /** @var DirectoryValidatorInterface */
-    private $directoryValidator;
+    /** @var string */
+    private $projectRootDirectory;
+    /** @var object */
+    private $composerJsonObject;
 
     /**
      * NamespaceUtil constructor.
      *
-     * @param ComposerJsonFileUtilInterface $composerJsonFileUtil
-     * @param DirectoryValidatorInterface   $directoryValidator
+     * @param string $projectRootDirectory
+     * @param object $composerJsonObject
      */
-    public function __construct(ComposerJsonFileUtilInterface $composerJsonFileUtil, DirectoryValidatorInterface $directoryValidator)
+    public function __construct(string $projectRootDirectory, object $composerJsonObject)
     {
-        $this->composerJsonFileUtil = $composerJsonFileUtil;
-        $this->directoryValidator = $directoryValidator;
+        $this->projectRootDirectory = $projectRootDirectory;
+        $this->composerJsonObject = $composerJsonObject;
     }
 
     /**
-     * @return ComposerJsonFileUtilInterface
+     * @return string
      */
-    public function getComposerJsonFileUtil(): ComposerJsonFileUtilInterface
+    public function getProjectRootDirectory(): string
     {
-        return $this->composerJsonFileUtil;
+        return $this->projectRootDirectory;
     }
 
     /**
-     * @return DirectoryValidatorInterface
+     * @return object
      */
-    public function getDirectoryValidator(): DirectoryValidatorInterface
+    public function getComposerJsonObject(): object
     {
-        return $this->directoryValidator;
+        return $this->composerJsonObject;
     }
 
     /**
      * @param string $filePath
-     * @param object $composerJsonObject
      *
      * @throws Exception
      *
      * @return string
      */
-    public function generateNamespaceFromPath(string $filePath, object $composerJsonObject): string
+    public function generateNamespaceFromPath(string $filePath): string
     {
         $_file_path = realpath($filePath);
-        $directoryValidation = $this->getDirectoryValidator()->validateDirectory($_file_path);
-        if ($directoryValidation !== DirectoryValidatorInterface::OK) {
-            throw new Exception(__METHOD__ . ' : ' . $directoryValidation);
-        }
 
-        $project_root = dirname($this->getComposerJsonFileUtil()->findComposerJSON($_file_path));
+        $project_root = $this->getProjectRootDirectory();
+        $composerJsonObject = $this->getComposerJsonObject();
         $psr_4 = self::PSR_4;
         $autoload_dev = self::AUTOLOAD_DEV;
 
@@ -85,15 +80,15 @@ class NamespaceUtil implements NamespaceUtilInterface
 
     /**
      * @param string $namespace
-     * @param string $projectRootDirectory
-     * @param object $composerJsonObject
      *
      * @return string
      */
-    public function generatePathFromNamespace(string $namespace, string $projectRootDirectory, object $composerJsonObject): string
+    public function generatePathFromNamespace(string $namespace): string
     {
         $psr_4 = self::PSR_4;
         $autoload_dev = self::AUTOLOAD_DEV;
+        $projectRootDirectory = $this->getProjectRootDirectory();
+        $composerJsonObject = $this->getComposerJsonObject();
 
         $result = '';
         $match = '';
@@ -118,6 +113,22 @@ class NamespaceUtil implements NamespaceUtilInterface
             }
         }
 
+        if (!empty($result)) {
+            $result .= '.php';
+        }
+
         return $result;
+    }
+
+    /**
+     * @param string $namespace
+     *
+     * @return bool
+     */
+    public function fileWithFqcnExists(string $namespace): bool
+    {
+        $filename = $this->generatePathFromNamespace($namespace);
+
+        return file_exists($filename) && is_file($filename);
     }
 }

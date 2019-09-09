@@ -1,9 +1,9 @@
 <?php
 
+declare(strict_types = 1);
+
 namespace Constup\ComposerUtils;
 
-
-use Constup\Validator\Filesystem\DirectoryValidatorInterface;
 use Exception;
 
 /**
@@ -14,16 +14,11 @@ use Exception;
 interface ComposerJsonFileUtilInterface
 {
     /**
-     * @return DirectoryValidatorInterface
-     */
-    public function getDirectoryValidator(): DirectoryValidatorInterface;
-
-    /**
      * @param string $startDirectory
      *
-     * @return string|null
      * @throws Exception
      *
+     * @return string|null
      */
     public function findComposerJSON(string $startDirectory): ?string;
 
@@ -37,9 +32,9 @@ interface ComposerJsonFileUtilInterface
     /**
      * @param string $startDirectory
      *
-     * @return object
      * @throws Exception
      *
+     * @return object
      */
     public function findAndFetchComposerJson(string $startDirectory): object;
 }
