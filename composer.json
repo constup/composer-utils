@@ -21,7 +21,6 @@
     },
     "minimum-stability": "stable",
     "require": {
-        "constup/validator": "^0.2.1",
         "ext-json": "^1.6"
     }
 }

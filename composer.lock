@@ -4,45 +4,8 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
         "This file is @generated automatically"
     ],
-    "content-hash": "bb8bc2aa9c899fe86408903a3ad62221",
-    "packages": [
-        {
-            "name": "constup/validator",
-            "version": "0.2.1",
-            "source": {
-                "type": "git",
-                "url": "https://github.com/constup/validator.git",
-                "reference": "649a08fdf22e20aba477f55a57c10bbce7731a24"
-            },
-            "dist": {
-                "type": "zip",
-                "url": "https://api.github.com/repos/constup/validator/zipball/649a08fdf22e20aba477f55a57c10bbce7731a24",
-                "reference": "649a08fdf22e20aba477f55a57c10bbce7731a24",
-                "shasum": ""
-            },
-            "require": {
-                "ext-json": "^1.6"
-            },
-            "type": "library",
-            "autoload": {
-                "psr-4": {
-                    "Constup\\Validator\\": "src/"
-                }
-            },
-            "notification-url": "https://packagist.org/downloads/",
-            "license": [
-                "MIT"
-            ],
-            "authors": [
-                {
-                    "name": "Constup",
-                    "email": "16638173+constup@users.noreply.github.com"
-                }
-            ],
-            "description": "PHP validators.",
-            "time": "2019-06-16T12:41:44+00:00"
-        }
-    ],
+    "content-hash": "7b325f0f1113187f091c9af64f5266d8",
+    "packages": [],
     "packages-dev": [],
     "aliases": [],
     "minimum-stability": "stable",
