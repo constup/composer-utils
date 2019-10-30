@@ -63,7 +63,7 @@ class NamespaceUtil implements NamespaceUtilInterface
         $autoload_dev = self::AUTOLOAD_DEV;
 
         foreach ($composerJsonObject->autoload->$psr_4 as $namespace_root => $namespace_base_dir) {
-            $_absolute_namespace_dir = rtrim($project_root . DIRECTORY_SEPARATOR . $namespace_base_dir, '\\/');
+            $_absolute_namespace_dir = realpath(rtrim($project_root . DIRECTORY_SEPARATOR . $namespace_base_dir, '\\/'));
             if (strpos($_file_path, $_absolute_namespace_dir) === 0) {
                 return rtrim(str_replace('\\\\', '\\', $namespace_root . substr($_file_path, strlen($_absolute_namespace_dir))), '\\');
             }
@@ -75,7 +75,7 @@ class NamespaceUtil implements NamespaceUtilInterface
             }
         }
 
-        throw new Exception(__METHOD__ . ' : ' . 'File path "' . $filePath . '" does not belong to any namespace.');
+        throw new Exception(__METHOD__ . ' : ' . 'File path "' . $_file_path . '" does not belong to any namespace.');
     }
 
     /**
