@@ -106,9 +106,14 @@ class NamespaceUtil implements NamespaceUtilInterface
                 $_namespace_base_dir = str_replace('/', DIRECTORY_SEPARATOR, $namespace_base_dir);
                 $_namespace = substr_replace($namespace, $_namespace_base_dir, 0, strlen($namespace_root));
                 $_result = rtrim($projectRootDirectory, '\\/') . DIRECTORY_SEPARATOR . $_namespace;
-                // If previously found namespace root is a substring of the currently processed namespace root, the result is the new namespace root.
-                if (strpos($namespace_root, $match) !== false) {
+                // This covers the case when the namespace defined in autoload-dev is not a subset of any namespace defined in autoload.
+                if (empty($match)) {
                     $result = $_result;
+                } else {
+                    // If previously found namespace root is a substring of the currently processed namespace root, the result is the new namespace root.
+                    if (strpos($namespace_root, $match) !== false) {
+                        $result = $_result;
+                    }
                 }
             }
         }
