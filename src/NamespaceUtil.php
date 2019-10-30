@@ -75,7 +75,7 @@ class NamespaceUtil implements NamespaceUtilInterface
             }
         }
 
-        throw new Exception(__METHOD__ . ' : ' . 'File path does not belong to any namespace.');
+        throw new Exception(__METHOD__ . ' : ' . 'File path "' . $filePath . '" does not belong to any namespace.');
     }
 
     /**
