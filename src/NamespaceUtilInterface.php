@@ -43,9 +43,16 @@ interface NamespaceUtilInterface
     public function generatePathFromNamespace(string $namespace): string;
 
     /**
-     * @param string $namespace
+     * @param string $fqcn
+     *
+     * @return string|null
+     */
+    public function generatePathFromFqcn(string $fqcn): ?string;
+
+    /**
+     * @param string $fqcn
      *
      * @return bool
      */
-    public function fileWithFqcnExists(string $namespace): bool;
+    public function fileWithFqcnExists(string $fqcn): bool;
 }

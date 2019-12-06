@@ -118,21 +118,27 @@ class NamespaceUtil implements NamespaceUtilInterface
             }
         }
 
-        if (!empty($result)) {
-            $result .= '.php';
-        }
-
         return $result;
     }
 
     /**
-     * @param string $namespace
+     * @param string $fqcn
+     *
+     * @return string|null
+     */
+    public function generatePathFromFqcn(string $fqcn): ?string
+    {
+        return (empty($this->generatePathFromNamespace($fqcn))) ? null : $this->generatePathFromNamespace($fqcn) . '.php';
+    }
+
+    /**
+     * @param string $fqcn
      *
      * @return bool
      */
-    public function fileWithFqcnExists(string $namespace): bool
+    public function fileWithFqcnExists(string $fqcn): bool
     {
-        $filename = $this->generatePathFromNamespace($namespace);
+        $filename = $this->generatePathFromFqcn($fqcn);
 
         return file_exists($filename) && is_file($filename);
     }
