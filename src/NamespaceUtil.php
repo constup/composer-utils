@@ -47,6 +47,47 @@ class NamespaceUtil implements NamespaceUtilInterface
     }
 
     /**
+     * @return array
+     */
+    public function getAllBaseComposerAutoloadNamespaces(): array
+    {
+        $psr_4 = self::PSR_4;
+        $composerJsonObject = $this->getComposerJsonObject();
+        $result = [];
+
+        foreach ($composerJsonObject->autoload->$psr_4 as $namespace_root => $namespace_base_dir) {
+            $result[$namespace_root] = $namespace_base_dir;
+        }
+
+        return $result;
+    }
+
+    /**
+     * @return array
+     */
+    public function getAllBaseComposerAutoloadDevNamespaces(): array
+    {
+        $psr_4 = self::PSR_4;
+        $autoload_dev = self::AUTOLOAD_DEV;
+        $composerJsonObject = $this->getComposerJsonObject();
+        $result = [];
+
+        foreach ($composerJsonObject->$autoload_dev->$psr_4 as $namespace_root => $namespace_base_dir) {
+            $result[$namespace_root] = $namespace_base_dir;
+        }
+
+        return $result;
+    }
+
+    /**
+     * @return array
+     */
+    public function getAllBaseComposerNamespaces(): array
+    {
+        return array_merge($this->getAllBaseComposerAutoloadNamespaces(), $this->getAllBaseComposerAutoloadDevNamespaces());
+    }
+
+    /**
      * @param string $filePath
      *
      * @throws Exception
@@ -57,19 +98,18 @@ class NamespaceUtil implements NamespaceUtilInterface
     {
         $_file_path = realpath($filePath);
 
-        $project_root = $this->getProjectRootDirectory();
-        $composerJsonObject = $this->getComposerJsonObject();
-        $psr_4 = self::PSR_4;
-        $autoload_dev = self::AUTOLOAD_DEV;
+        $projectRootDirectory = $this->getProjectRootDirectory();
+        $allBaseComposerAutoloadNamespaces = $this->getAllBaseComposerAutoloadNamespaces();
+        $allBaseComposerAutoloadDevNamespaces = $this->getAllBaseComposerAutoloadDevNamespaces();
 
-        foreach ($composerJsonObject->autoload->$psr_4 as $namespace_root => $namespace_base_dir) {
-            $_absolute_namespace_dir = realpath(rtrim($project_root . DIRECTORY_SEPARATOR . $namespace_base_dir, '\\/'));
+        foreach ($allBaseComposerAutoloadNamespaces as $namespace_root => $namespace_base_dir) {
+            $_absolute_namespace_dir = realpath(rtrim($projectRootDirectory . DIRECTORY_SEPARATOR . $namespace_base_dir, '\\/'));
             if (strpos($_file_path, $_absolute_namespace_dir) === 0) {
                 return rtrim(str_replace('\\\\', '\\', $namespace_root . substr($_file_path, strlen($_absolute_namespace_dir))), '\\');
             }
         }
-        foreach ($composerJsonObject->$autoload_dev->$psr_4 as $namespace_root => $namespace_base_dir) {
-            $_absolute_namespace_dir = rtrim($project_root . DIRECTORY_SEPARATOR . $namespace_base_dir, '\\/');
+        foreach ($allBaseComposerAutoloadDevNamespaces as $namespace_root => $namespace_base_dir) {
+            $_absolute_namespace_dir = rtrim($projectRootDirectory . DIRECTORY_SEPARATOR . $namespace_base_dir, '\\/');
             if (strpos($_file_path, $_absolute_namespace_dir) === 0) {
                 return rtrim(str_replace('\\\\', '\\', $namespace_root . substr($_file_path, strlen($_absolute_namespace_dir))), '\\');
             }
@@ -85,14 +125,13 @@ class NamespaceUtil implements NamespaceUtilInterface
      */
     public function generatePathFromNamespace(string $namespace): string
     {
-        $psr_4 = self::PSR_4;
-        $autoload_dev = self::AUTOLOAD_DEV;
         $projectRootDirectory = $this->getProjectRootDirectory();
-        $composerJsonObject = $this->getComposerJsonObject();
+        $allBaseComposerAutoloadNamespaces = $this->getAllBaseComposerAutoloadNamespaces();
+        $allBaseComposerAutoloadDevNamespaces = $this->getAllBaseComposerAutoloadDevNamespaces();
 
         $result = '';
         $match = '';
-        foreach ($composerJsonObject->autoload->$psr_4 as $namespace_root => $namespace_base_dir) {
+        foreach ($allBaseComposerAutoloadNamespaces as $namespace_root => $namespace_base_dir) {
             if (strpos($namespace, $namespace_root) === 0) {
                 $_namespace_base_dir = str_replace('/', DIRECTORY_SEPARATOR, $namespace_base_dir);
                 $_namespace = substr_replace($namespace, $_namespace_base_dir, 0, strlen($namespace_root));
@@ -101,7 +140,7 @@ class NamespaceUtil implements NamespaceUtilInterface
             }
         }
 
-        foreach ($composerJsonObject->$autoload_dev->$psr_4 as $namespace_root => $namespace_base_dir) {
+        foreach ($allBaseComposerAutoloadDevNamespaces as $namespace_root => $namespace_base_dir) {
             if (strpos($namespace, $namespace_root) === 0) {
                 $_namespace_base_dir = str_replace('/', DIRECTORY_SEPARATOR, $namespace_base_dir);
                 $_namespace = substr_replace($namespace, $_namespace_base_dir, 0, strlen($namespace_root));
@@ -141,5 +180,24 @@ class NamespaceUtil implements NamespaceUtilInterface
         $filename = $this->generatePathFromFqcn($fqcn);
 
         return file_exists($filename) && is_file($filename);
+    }
+
+    /**
+     * @param string $namespaceOrFqcn
+     *
+     * @return string
+     */
+    public function getComposerBaseNamespace(string $namespaceOrFqcn): string
+    {
+        $allBaseComposerNamespaces = $this->getAllBaseComposerNamespaces();
+        $result = '';
+
+        foreach ($allBaseComposerNamespaces as $namespaceRoot => $namespaceBaseDir) {
+            if ((strpos($namespaceOrFqcn, $namespaceRoot) === 0) && (strlen($result) < strlen($namespaceRoot))) {
+                $result = $namespaceRoot;
+            }
+        }
+
+        return $result;
     }
 }

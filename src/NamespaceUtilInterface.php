@@ -17,6 +17,21 @@ interface NamespaceUtilInterface
     const AUTOLOAD_DEV = 'autoload-dev';
 
     /**
+     * @return array
+     */
+    public function getAllBaseComposerAutoloadNamespaces(): array;
+
+    /**
+     * @return array
+     */
+    public function getAllBaseComposerAutoloadDevNamespaces(): array;
+
+    /**
+     * @return array
+     */
+    public function getAllBaseComposerNamespaces(): array;
+
+    /**
      * @return string
      */
     public function getProjectRootDirectory(): string;
@@ -55,4 +70,11 @@ interface NamespaceUtilInterface
      * @return bool
      */
     public function fileWithFqcnExists(string $fqcn): bool;
+
+    /**
+     * @param string $namespaceOrFqcn
+     *
+     * @return string
+     */
+    public function getComposerBaseNamespace(string $namespaceOrFqcn): string;
 }
