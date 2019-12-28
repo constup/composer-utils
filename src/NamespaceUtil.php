@@ -200,4 +200,18 @@ class NamespaceUtil implements NamespaceUtilInterface
 
         return $result;
     }
+
+    /**
+     * @param string $componentFqcn
+     * @param string $testNamespaceMarker
+     *
+     * @return string
+     */
+    public function generateTestNamespaceForComponent(string $componentFqcn, string $testNamespaceMarker = self::TEST_NAMESPACE_MARKER_TESTS): string
+    {
+        $baseComponentNamespace = $this->getComposerBaseNamespace($componentFqcn);
+        $baseComponentTestNamespace = $baseComponentNamespace . $testNamespaceMarker . '\\';
+
+        return str_replace($baseComponentNamespace, $baseComponentTestNamespace, $componentFqcn);
+    }
 }

@@ -16,6 +16,9 @@ interface NamespaceUtilInterface
     const PSR_4 = 'psr-4';
     const AUTOLOAD_DEV = 'autoload-dev';
 
+    const TEST_NAMESPACE_MARKER_TEST = 'Test';
+    const TEST_NAMESPACE_MARKER_TESTS = 'Tests';
+
     /**
      * @return array
      */
@@ -77,4 +80,12 @@ interface NamespaceUtilInterface
      * @return string
      */
     public function getComposerBaseNamespace(string $namespaceOrFqcn): string;
+
+    /**
+     * @param string $componentFqcn
+     * @param string $testNamespaceMarker
+     *
+     * @return string
+     */
+    public function generateTestNamespaceForComponent(string $componentFqcn, string $testNamespaceMarker = self::TEST_NAMESPACE_MARKER_TESTS): string;
 }
