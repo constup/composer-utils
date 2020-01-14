@@ -21,6 +21,11 @@
     },
     "minimum-stability": "stable",
     "require": {
-        "ext-json": "^1.6"
+        "ext-json": "^1.6",
+        "constup/default-function-wrappers": "^0.0.1"
+    },
+    "require-dev": {
+        "phpunit/phpunit": "^8.5",
+        "fzaninotto/faker": "^1.9"
     }
 }

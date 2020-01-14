@@ -96,11 +96,13 @@ class NamespaceUtil implements NamespaceUtilInterface
      */
     public function generateNamespaceFromPath(string $filePath): string
     {
+        $psr_4 = self::PSR_4;
+        $autoload_dev = self::AUTOLOAD_DEV;
         $_file_path = realpath($filePath);
 
         $projectRootDirectory = $this->getProjectRootDirectory();
-        $allBaseComposerAutoloadNamespaces = $this->getAllBaseComposerAutoloadNamespaces();
-        $allBaseComposerAutoloadDevNamespaces = $this->getAllBaseComposerAutoloadDevNamespaces();
+        $allBaseComposerAutoloadNamespaces = $this->getComposerJsonObject()->autoload->$psr_4;
+        $allBaseComposerAutoloadDevNamespaces = $this->getComposerJsonObject()->$autoload_dev->$psr_4;
 
         foreach ($allBaseComposerAutoloadNamespaces as $namespace_root => $namespace_base_dir) {
             $_absolute_namespace_dir = realpath(rtrim($projectRootDirectory . DIRECTORY_SEPARATOR . $namespace_base_dir, '\\/'));
@@ -119,15 +121,21 @@ class NamespaceUtil implements NamespaceUtilInterface
     }
 
     /**
+     * Use this method to generate a directory path based on a namespace.
+     * To generate PHP file path instead, @see NamespaceUtilInterface::generatePathFromFqcn() instead.
+     *
      * @param string $namespace
      *
      * @return string
      */
     public function generatePathFromNamespace(string $namespace): string
     {
+        $psr_4 = self::PSR_4;
+        $autoload_dev = self::AUTOLOAD_DEV;
+
         $projectRootDirectory = $this->getProjectRootDirectory();
-        $allBaseComposerAutoloadNamespaces = $this->getAllBaseComposerAutoloadNamespaces();
-        $allBaseComposerAutoloadDevNamespaces = $this->getAllBaseComposerAutoloadDevNamespaces();
+        $allBaseComposerAutoloadNamespaces = $this->getComposerJsonObject()->autoload->$psr_4;
+        $allBaseComposerAutoloadDevNamespaces = $this->getComposerJsonObject()->$autoload_dev->$psr_4;
 
         $result = '';
         $match = '';
@@ -161,6 +169,9 @@ class NamespaceUtil implements NamespaceUtilInterface
     }
 
     /**
+     * Use this method to generate a PHP file path based on its FQCN.
+     * To determine a directory path based on namespace, @see NamespaceUtilInterface::generatePathFromNamespace() instead.
+     *
      * @param string $fqcn
      *
      * @return string|null
@@ -189,7 +200,12 @@ class NamespaceUtil implements NamespaceUtilInterface
      */
     public function getComposerBaseNamespace(string $namespaceOrFqcn): string
     {
-        $allBaseComposerNamespaces = $this->getAllBaseComposerNamespaces();
+        $psr_4 = self::PSR_4;
+        $autoload_dev = self::AUTOLOAD_DEV;
+
+        $autoloadNamespaces = $this->getComposerJsonObject()->autoload->$psr_4;
+        $autoloadDevNamespaces = $this->getComposerJsonObject()->$autoload_dev->$psr_4;
+        $allBaseComposerNamespaces = array_merge($autoloadNamespaces, $autoloadDevNamespaces);
         $result = '';
 
         foreach ($allBaseComposerNamespaces as $namespaceRoot => $namespaceBaseDir) {
