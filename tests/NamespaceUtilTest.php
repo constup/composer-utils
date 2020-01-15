@@ -7,12 +7,9 @@ namespace Constup\ComposerUtils\Tests;
 use Constup\ComposerUtils\NamespaceUtil;
 use Constup\ComposerUtils\NamespaceUtilInterface;
 use Exception;
+use phpmock\phpunit\PHPMock;
 use PHPUnit\Framework\TestCase;
-
-function file_exists(): bool
-{
-
-}
+use ReflectionClass;
 
 /**
  * Class NamespaceUtilTest
@@ -21,9 +18,9 @@ function file_exists(): bool
  */
 class NamespaceUtilTest extends TestCase
 {
-    const TESTED_CLASS = NamespaceUtil::class;
+    use NamespaceUtilTestDataProvider, PHPMock;
 
-    use NamespaceUtilTestDataProvider;
+    const TESTED_CLASS = NamespaceUtil::class;
 
     /**
      * @param string $getProjectRootDirectory
@@ -98,17 +95,28 @@ class NamespaceUtilTest extends TestCase
 
     /**
      * @param string $generatePathFromFqcn
+     * @param bool $file_exists
+     * @param bool $is_file
      * @param string $fqcn
-     * @param string $expectedResult
+     * @param bool $expectedResult
+     *
+     * @dataProvider testFileWithFqcnExistsDataProvider
      */
-    public function testFileWithFqcnExists(string $generatePathFromFqcn, string $fqcn, string $expectedResult)
+    public function testFileWithFqcnExists(string $generatePathFromFqcn, bool $file_exists, bool $is_file, string $fqcn, bool $expectedResult)
     {
         $mock = $this->getMockBuilder(self::TESTED_CLASS)
             ->disableOriginalConstructor()
-            ->onlyMethods(["generatePathFromFqcn", "getDirectWrapperFunctions"])
+            ->onlyMethods(["generatePathFromFqcn"])
             ->getMock();
 
         $mock->method("generatePathFromFqcn")->willReturn($generatePathFromFqcn);
+
+        $reflectionClass = new ReflectionClass(self::TESTED_CLASS);
+        $reflectionClassNamespace = $reflectionClass->getNamespaceName();
+        $file_exists_mock = $this->getFunctionMock($reflectionClassNamespace, "file_exists");
+        $file_exists_mock->expects($this->once())->willReturn($file_exists);
+        $is_file_mock = $this->getFunctionMock($reflectionClassNamespace, "is_file");
+        $is_file_mock->expects($this->once())->willReturn($is_file);
 
         /** @var NamespaceUtilInterface $mock */
         $result = $mock->fileWithFqcnExists($fqcn);

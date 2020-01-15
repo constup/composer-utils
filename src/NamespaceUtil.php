@@ -189,8 +189,10 @@ class NamespaceUtil implements NamespaceUtilInterface
     public function fileWithFqcnExists(string $fqcn): bool
     {
         $filename = $this->generatePathFromFqcn($fqcn);
+        $file_exists = file_exists($filename);
+        $is_file = is_file($filename);
 
-        return file_exists($filename) && is_file($filename);
+        return $file_exists && $is_file;
     }
 
     /**
