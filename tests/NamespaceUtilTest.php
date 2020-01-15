@@ -22,6 +22,17 @@ class NamespaceUtilTest extends TestCase
 
     const TESTED_CLASS = NamespaceUtil::class;
 
+    /** @var string */
+    private $testedClassNamespace;
+
+    protected function setUp(): void
+    {
+        parent::setUp();
+
+        $reflectionClass = new ReflectionClass(self::TESTED_CLASS);
+        $this->testedClassNamespace = $reflectionClass->getNamespaceName();
+    }
+
     /**
      * @param string $getProjectRootDirectory
      * @param object $getComposerJsonObject
@@ -111,11 +122,9 @@ class NamespaceUtilTest extends TestCase
 
         $mock->method("generatePathFromFqcn")->willReturn($generatePathFromFqcn);
 
-        $reflectionClass = new ReflectionClass(self::TESTED_CLASS);
-        $reflectionClassNamespace = $reflectionClass->getNamespaceName();
-        $file_exists_mock = $this->getFunctionMock($reflectionClassNamespace, "file_exists");
+        $file_exists_mock = $this->getFunctionMock($this->testedClassNamespace, "file_exists");
         $file_exists_mock->expects($this->atMost(1))->willReturn($file_exists);
-        $is_file_mock = $this->getFunctionMock($reflectionClassNamespace, "is_file");
+        $is_file_mock = $this->getFunctionMock($this->testedClassNamespace, "is_file");
         $is_file_mock->expects($this->atMost(1))->willReturn($is_file);
 
         /** @var NamespaceUtilInterface $mock */
