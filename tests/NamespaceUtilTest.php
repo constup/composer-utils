@@ -114,9 +114,9 @@ class NamespaceUtilTest extends TestCase
         $reflectionClass = new ReflectionClass(self::TESTED_CLASS);
         $reflectionClassNamespace = $reflectionClass->getNamespaceName();
         $file_exists_mock = $this->getFunctionMock($reflectionClassNamespace, "file_exists");
-        $file_exists_mock->expects($this->once())->willReturn($file_exists);
+        $file_exists_mock->expects($this->atMost(1))->willReturn($file_exists);
         $is_file_mock = $this->getFunctionMock($reflectionClassNamespace, "is_file");
-        $is_file_mock->expects($this->once())->willReturn($is_file);
+        $is_file_mock->expects($this->atMost(1))->willReturn($is_file);
 
         /** @var NamespaceUtilInterface $mock */
         $result = $mock->fileWithFqcnExists($fqcn);
