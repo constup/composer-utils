@@ -1,6 +1,6 @@
 <?php
 
-declare(strict_types=1);
+declare(strict_types = 1);
 
 namespace Constup\ComposerUtils\Tests;
 
@@ -38,6 +38,7 @@ class NamespaceUtilTest extends TestCase
      * @param object $getComposerJsonObject
      * @param string $filePath
      * @param string $expectedResult
+     *
      * @throws Exception
      *
      * @dataProvider testGenerateNamespaceFromPathDataProvider
@@ -46,11 +47,11 @@ class NamespaceUtilTest extends TestCase
     {
         $mock = $this->getMockBuilder(self::TESTED_CLASS)
             ->disableOriginalConstructor()
-            ->onlyMethods(["getProjectRootDirectory", "getComposerJsonObject"])
+            ->onlyMethods(['getProjectRootDirectory', 'getComposerJsonObject'])
             ->getMock();
 
-        $mock->method("getProjectRootDirectory")->willReturn($getProjectRootDirectory);
-        $mock->method("getComposerJsonObject")->willReturn($getComposerJsonObject);
+        $mock->method('getProjectRootDirectory')->willReturn($getProjectRootDirectory);
+        $mock->method('getComposerJsonObject')->willReturn($getComposerJsonObject);
 
         /** @var NamespaceUtilInterface $mock */
         $result = $mock->generateNamespaceFromPath($filePath);
@@ -70,11 +71,11 @@ class NamespaceUtilTest extends TestCase
     {
         $mock = $this->getMockBuilder(self::TESTED_CLASS)
             ->disableOriginalConstructor()
-            ->onlyMethods(["getProjectRootDirectory", "getComposerJsonObject"])
+            ->onlyMethods(['getProjectRootDirectory', 'getComposerJsonObject'])
             ->getMock();
 
-        $mock->method("getProjectRootDirectory")->willReturn($getProjectRotDirectory);
-        $mock->method("getComposerJsonObject")->willReturn($getComposerJsonObject);
+        $mock->method('getProjectRootDirectory')->willReturn($getProjectRotDirectory);
+        $mock->method('getComposerJsonObject')->willReturn($getComposerJsonObject);
 
         /** @var NamespaceUtilInterface $mock */
         $result = $mock->generatePathFromNamespace($namespace);
@@ -93,10 +94,10 @@ class NamespaceUtilTest extends TestCase
     {
         $mock = $this->getMockBuilder(self::TESTED_CLASS)
             ->disableOriginalConstructor()
-            ->onlyMethods(["generatePathFromNamespace"])
+            ->onlyMethods(['generatePathFromNamespace'])
             ->getMock();
 
-        $mock->method("generatePathFromNamespace")->willReturn($generatePathFromNamespace);
+        $mock->method('generatePathFromNamespace')->willReturn($generatePathFromNamespace);
 
         /** @var NamespaceUtilInterface $mock */
         $result = $mock->generatePathFromFqcn($fqcn);
@@ -106,10 +107,10 @@ class NamespaceUtilTest extends TestCase
 
     /**
      * @param string $generatePathFromFqcn
-     * @param bool $file_exists
-     * @param bool $is_file
+     * @param bool   $file_exists
+     * @param bool   $is_file
      * @param string $fqcn
-     * @param bool $expectedResult
+     * @param bool   $expectedResult
      *
      * @dataProvider testFileWithFqcnExistsDataProvider
      */
@@ -117,19 +118,64 @@ class NamespaceUtilTest extends TestCase
     {
         $mock = $this->getMockBuilder(self::TESTED_CLASS)
             ->disableOriginalConstructor()
-            ->onlyMethods(["generatePathFromFqcn"])
+            ->onlyMethods(['generatePathFromFqcn'])
             ->getMock();
 
-        $mock->method("generatePathFromFqcn")->willReturn($generatePathFromFqcn);
+        $mock->method('generatePathFromFqcn')->willReturn($generatePathFromFqcn);
 
-        $file_exists_mock = $this->getFunctionMock($this->testedClassNamespace, "file_exists");
+        $file_exists_mock = $this->getFunctionMock($this->testedClassNamespace, 'file_exists');
         $file_exists_mock->expects($this->atMost(1))->willReturn($file_exists);
-        $is_file_mock = $this->getFunctionMock($this->testedClassNamespace, "is_file");
+        $is_file_mock = $this->getFunctionMock($this->testedClassNamespace, 'is_file');
         $is_file_mock->expects($this->atMost(1))->willReturn($is_file);
 
         /** @var NamespaceUtilInterface $mock */
         $result = $mock->fileWithFqcnExists($fqcn);
         $this->assertIsBool($result);
+        $this->assertEquals($expectedResult, $result);
+    }
+
+    /**
+     * @param object $getComposerJsonObject
+     * @param string $namespaceOrFqcn
+     * @param string $expectedResult
+     *
+     * @dataProvider testGetComposerBaseNamespaceDataProvider
+     */
+    public function testGetComposerBaseNamespace(object $getComposerJsonObject, string $namespaceOrFqcn, string $expectedResult)
+    {
+        $mock = $this->getMockBuilder(self::TESTED_CLASS)
+            ->disableOriginalConstructor()
+            ->onlyMethods(['getComposerJsonObject'])
+            ->getMock();
+
+        $mock->method('getComposerJsonObject')->willReturn($getComposerJsonObject);
+
+        /** @var NamespaceUtilInterface $mock */
+        $result = $mock->getComposerBaseNamespace($namespaceOrFqcn);
+        $this->assertIsString($result);
+        $this->assertEquals($expectedResult, $result);
+    }
+
+    /**
+     * @param string $getComposerBaseNamespace
+     * @param string $componentFqcn
+     * @param string $testNamespaceMarker
+     * @param string $expectedResult
+     *
+     * @dataProvider testGenerateTestNamespaceForComponentDataProvider
+     */
+    public function testGenerateTestNamespaceForComponent(string $getComposerBaseNamespace, string $componentFqcn, string $testNamespaceMarker, string $expectedResult)
+    {
+        $mock = $this->getMockBuilder(self::TESTED_CLASS)
+            ->disableOriginalConstructor()
+            ->onlyMethods(['getComposerBaseNamespace'])
+            ->getMock();
+
+        $mock->method('getComposerBaseNamespace')->willReturn($getComposerBaseNamespace);
+
+        /** @var NamespaceUtilInterface $mock */
+        $result = $mock->generateTestNamespaceForComponent($componentFqcn, $testNamespaceMarker);
+        $this->assertIsString($result);
         $this->assertEquals($expectedResult, $result);
     }
 }

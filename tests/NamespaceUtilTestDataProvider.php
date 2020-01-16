@@ -57,4 +57,24 @@ trait NamespaceUtilTestDataProvider
 
         return $result;
     }
+
+    public function testGetComposerBaseNamespaceDataProvider()
+    {
+        /**
+         * @param object $getComposerJsonObject
+         * @param string $namespaceOrFqcn
+         * @param string $expectedResult
+         */
+
+        $result = [];
+
+        return $result;
+    }
+
+    public function testGenerateTestNamespaceForComponentDataProvider()
+    {
+        $result = [];
+
+        return $result;
+    }
 }
