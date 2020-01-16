@@ -4,9 +4,7 @@ declare(strict_types=1);
 
 namespace Constup\ComposerUtils\Tests;
 
-use Constup\ComposerUtils\NamespaceUtilInterface;
 use Faker\Factory;
-use stdClass;
 
 /**
  * Trait NamespaceUtilTestDataProvider
@@ -17,6 +15,13 @@ trait NamespaceUtilTestDataProvider
 {
     public function testGenerateNamespaceFromPathDataProvider()
     {
+        /**
+         * @param string $getProjectRootDirectory
+         * @param object $getComposerJsonObject
+         * @param string $filePath
+         * @param string $expectedResult
+         */
+
         $result = [];
 
         return $result;
@@ -24,6 +29,13 @@ trait NamespaceUtilTestDataProvider
 
     public function testGeneratePathFromNamespaceDataProvider()
     {
+        /**
+         * @param string $getProjectRotDirectory
+         * @param object $getComposerJsonObject
+         * @param string $namespace
+         * @param string $expectedResult
+         */
+
         $result = [];
 
         return $result;
@@ -31,6 +43,12 @@ trait NamespaceUtilTestDataProvider
 
     public function testGeneratePathFromFqcnDataProvider()
     {
+        /**
+         * @param string $generatePathFromNamespace
+         * @param string $fqcn
+         * @param string $expectedResult
+         */
+
         $result = [];
 
         return $result;
@@ -73,6 +91,13 @@ trait NamespaceUtilTestDataProvider
 
     public function testGenerateTestNamespaceForComponentDataProvider()
     {
+        /**
+         * @param string $getComposerBaseNamespace
+         * @param string $componentFqcn
+         * @param string $testNamespaceMarker
+         * @param string $expectedResult
+        */
+
         $result = [];
 
         return $result;
