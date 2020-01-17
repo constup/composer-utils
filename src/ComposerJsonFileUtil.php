@@ -20,11 +20,9 @@ class ComposerJsonFileUtil implements ComposerJsonFileUtilInterface
      *
      * @param string $startDirectory A directory where you want to start searching for `composer.json` from. The method will search the directory tree upwards up until the root.
      *
-     * @throws Exception
-     *
      * @return string|null
      */
-    public function findComposerJSON(string $startDirectory): ?string
+    public function findComposerJson(string $startDirectory): ?string
     {
         $_start_directory = rtrim($startDirectory, DIRECTORY_SEPARATOR) . DIRECTORY_SEPARATOR;
         $composerJSON = $_start_directory . 'composer.json';
@@ -33,21 +31,21 @@ class ComposerJsonFileUtil implements ComposerJsonFileUtilInterface
                 return null;
             }
 
-            return self::findComposerJSON(dirname($_start_directory));
+            return $this->findComposerJson(dirname($_start_directory));
         }
 
         return realpath($composerJSON);
     }
 
     /**
-     * Returns the contents of `composer.json` object in an object form. Sub-nodes aree then accessible as object's properties.
+     * Returns the contents of `composer.json` object in an object form. Sub-nodes are then accessible as object's properties.
      * A special case are nodes which have `-` sign in them (ex.: `autoload-dev`), since you can't directly access an object's property with the sign in it. To access the property, store the name of the node in a constant and access by using the constant (ex. `self::$AUTOLOAD_DEV`).
      *
      * @param string $composerJsonFilePath Absolute file path of a `composer.json` file.
      *
      * @return object
      */
-    public function fetchComposerJSONObject(string $composerJsonFilePath): object
+    public function fetchComposerJsonObject(string $composerJsonFilePath): object
     {
         return json_decode(file_get_contents($composerJsonFilePath));
     }
@@ -63,11 +61,11 @@ class ComposerJsonFileUtil implements ComposerJsonFileUtilInterface
      */
     public function findAndFetchComposerJson(string $startDirectory): object
     {
-        $composerJsonFilePath = $this->findComposerJSON($startDirectory);
+        $composerJsonFilePath = $this->findComposerJson($startDirectory);
         if ($composerJsonFilePath == null) {
             throw new Exception(__METHOD__ . '->' . 'composer.json file not found.');
         }
 
-        return $this->fetchComposerJSONObject($composerJsonFilePath);
+        return $this->fetchComposerJsonObject($composerJsonFilePath);
     }
 }

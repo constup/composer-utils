@@ -16,10 +16,10 @@ trait NamespaceUtilTestDataProvider
     public function testGenerateNamespaceFromPathDataProvider()
     {
         /**
-         * @param string $getProjectRootDirectory
-         * @param object $getComposerJsonObject
-         * @param string $filePath
-         * @param string $expectedResult
+         * @var string $getProjectRootDirectory
+         * @var object $getComposerJsonObject
+         * @var string $filePath
+         * @var string $expectedResult
          */
 
         $result = [];
@@ -30,10 +30,10 @@ trait NamespaceUtilTestDataProvider
     public function testGeneratePathFromNamespaceDataProvider()
     {
         /**
-         * @param string $getProjectRotDirectory
-         * @param object $getComposerJsonObject
-         * @param string $namespace
-         * @param string $expectedResult
+         * @var string $getProjectRotDirectory
+         * @var object $getComposerJsonObject
+         * @var string $namespace
+         * @var string $expectedResult
          */
 
         $result = [];
@@ -44,9 +44,9 @@ trait NamespaceUtilTestDataProvider
     public function testGeneratePathFromFqcnDataProvider()
     {
         /**
-         * @param string $generatePathFromNamespace
-         * @param string $fqcn
-         * @param string $expectedResult
+         * @var string $generatePathFromNamespace
+         * @var string $fqcn
+         * @var string $expectedResult
          */
 
         $result = [];
@@ -79,9 +79,9 @@ trait NamespaceUtilTestDataProvider
     public function testGetComposerBaseNamespaceDataProvider()
     {
         /**
-         * @param object $getComposerJsonObject
-         * @param string $namespaceOrFqcn
-         * @param string $expectedResult
+         * @var object $getComposerJsonObject
+         * @var string $namespaceOrFqcn
+         * @var string $expectedResult
          */
 
         $result = [];
@@ -92,10 +92,10 @@ trait NamespaceUtilTestDataProvider
     public function testGenerateTestNamespaceForComponentDataProvider()
     {
         /**
-         * @param string $getComposerBaseNamespace
-         * @param string $componentFqcn
-         * @param string $testNamespaceMarker
-         * @param string $expectedResult
+         * @var string $getComposerBaseNamespace
+         * @var string $componentFqcn
+         * @var string $testNamespaceMarker
+         * @var string $expectedResult
         */
 
         $result = [];

@@ -16,18 +16,16 @@ interface ComposerJsonFileUtilInterface
     /**
      * @param string $startDirectory
      *
-     * @throws Exception
-     *
      * @return string|null
      */
-    public function findComposerJSON(string $startDirectory): ?string;
+    public function findComposerJson(string $startDirectory): ?string;
 
     /**
      * @param string $composerJsonFilePath
      *
      * @return object
      */
-    public function fetchComposerJSONObject(string $composerJsonFilePath): object;
+    public function fetchComposerJsonObject(string $composerJsonFilePath): object;
 
     /**
      * @param string $startDirectory
