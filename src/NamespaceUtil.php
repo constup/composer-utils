@@ -205,7 +205,13 @@ class NamespaceUtil implements NamespaceUtilInterface
 
         $autoloadNamespaces = $this->getComposerJsonObject()->autoload->$psr_4;
         $autoloadDevNamespaces = $this->getComposerJsonObject()->$autoload_dev->$psr_4;
-        $allBaseComposerNamespaces = array_merge($autoloadNamespaces, $autoloadDevNamespaces);
+        $allBaseComposerNamespaces = [];
+        foreach ($autoloadNamespaces as $key=>$value) {
+            $allBaseComposerNamespaces[$key] = $value;
+        }
+        foreach ($autoloadDevNamespaces as $key=>$value) {
+            $allBaseComposerNamespaces[$key] = $value;
+        }
         $result = '';
 
         foreach ($allBaseComposerNamespaces as $namespaceRoot => $namespaceBaseDir) {
