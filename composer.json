@@ -21,7 +21,7 @@
     },
     "minimum-stability": "stable",
     "require": {
-        "ext-json": "^1.6",
+        "php": "^7.4.1",
         "constup/default-function-wrappers": "^0.0.1"
     },
     "require-dev": {
