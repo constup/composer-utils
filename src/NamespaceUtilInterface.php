@@ -4,6 +4,7 @@ declare(strict_types = 1);
 
 namespace Constup\ComposerUtils;
 
+use Constup\DefaultFunctionWrappers\DirectWrapperFunctionsInterface;
 use Exception;
 
 /**
@@ -18,21 +19,6 @@ interface NamespaceUtilInterface
 
     const TEST_NAMESPACE_MARKER_TEST = 'Test';
     const TEST_NAMESPACE_MARKER_TESTS = 'Tests';
-
-    /**
-     * @return array
-     */
-    public function getAllBaseComposerAutoloadNamespaces(): array;
-
-    /**
-     * @return array
-     */
-    public function getAllBaseComposerAutoloadDevNamespaces(): array;
-
-    /**
-     * @return array
-     */
-    public function getAllBaseComposerNamespaces(): array;
 
     /**
      * @return string
