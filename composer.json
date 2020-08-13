@@ -11,7 +11,8 @@
     ],
     "autoload": {
         "psr-4": {
-            "Constup\\ComposerUtils\\": "src/"
+            "Constup\\ComposerUtils\\": "src/",
+            "Constup\\Automatrix\\": "automatrix_core/src/"
         }
     },
     "autoload-dev": {
