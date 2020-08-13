@@ -29,9 +29,14 @@ class NamespaceService implements NamespaceServiceInterface
         $result = [];
 
         foreach ($composerJsonObject->autoload->$psr_4 as $namespace => $directory) {
+            $_directory = realpath(rtrim($projectRootDirectory . DIRECTORY_SEPARATOR . $directory, '\\/'));
+            if ($_directory === false) {
+                // The directory doesn't exist. Do not process it.
+                continue;
+            }
             $result[] = new NamespaceImmutableObject(
                 $namespace,
-                realpath(rtrim($projectRootDirectory . DIRECTORY_SEPARATOR . $directory, '\\/'))
+                $_directory
             );
         }
 
@@ -53,9 +58,14 @@ class NamespaceService implements NamespaceServiceInterface
         $result = [];
 
         foreach ($composerJsonObject->$autoload_dev->$psr_4 as $namespace => $directory) {
+            $_directory = realpath(rtrim($projectRootDirectory . DIRECTORY_SEPARATOR . $directory, '\\/'));
+            if ($_directory === false) {
+                // The directory doesn't exist. Do not process it.
+                continue;
+            }
             $result[] = new NamespaceImmutableObject(
                 $namespace,
-                realpath(rtrim($projectRootDirectory . DIRECTORY_SEPARATOR . $directory, '\\/'))
+                $_directory
             );
         }
 
