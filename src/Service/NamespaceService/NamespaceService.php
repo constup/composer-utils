@@ -141,10 +141,12 @@ class NamespaceService implements NamespaceServiceInterface
 
         $autoload = $this->getAutoload($composerJsonObject, $projectRootDirectory);
         foreach ($autoload as $namespaceData) {
-            $namespaceBaseDir = str_replace('/', DIRECTORY_SEPARATOR, $namespaceData->getAbsoluteDirectory());
-            $_namespace = substr_replace($namespace, $namespaceBaseDir, 0, strlen($namespaceData->getNamespace()));
-            $match = $namespaceData->getNamespace();
-            $result = rtrim($projectRootDirectory, '\\/') . DIRECTORY_SEPARATOR . $_namespace;
+            if (strpos($namespace, $namespaceData->getNamespace()) === 0) {
+                $namespaceBaseDir = str_replace('/', DIRECTORY_SEPARATOR, $namespaceData->getAbsoluteDirectory());
+                $_namespace = substr_replace($namespace, $namespaceBaseDir, 0, strlen($namespaceData->getNamespace()));
+                $match = $namespaceData->getNamespace();
+                $result = rtrim($projectRootDirectory, '\\/') . DIRECTORY_SEPARATOR . $_namespace;
+            }
         }
 
         $autoloadDev = $this->getAutoloadDev($composerJsonObject, $projectRootDirectory);
