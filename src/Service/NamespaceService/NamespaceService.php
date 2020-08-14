@@ -143,8 +143,9 @@ class NamespaceService implements NamespaceServiceInterface
         foreach ($autoload as $namespaceData) {
             if (strpos($namespace, $namespaceData->getNamespace()) === 0) {
                 $namespaceBaseDir = str_replace('/', DIRECTORY_SEPARATOR, $namespaceData->getAbsoluteDirectory());
-                $_namespace = rtrim(substr_replace($namespace, $namespaceBaseDir, 0, strlen($namespaceData->getNamespace())), '\\/');
-                $result = rtrim($projectRootDirectory, '\\/') . DIRECTORY_SEPARATOR . $_namespace;
+                $count = 1;
+                $_namespace = str_replace($namespaceData->getNamespace() . '\\', '', $namespace, $count);
+                $result = rtrim($namespaceBaseDir, '\\/') . DIRECTORY_SEPARATOR . $_namespace;
                 $match = $namespaceData->getNamespace();
             }
         }
@@ -153,8 +154,9 @@ class NamespaceService implements NamespaceServiceInterface
         foreach ($autoloadDev as $namespaceData) {
             if (strpos($namespace, $namespaceData->getNamespace()) === 0) {
                 $namespaceBaseDir = str_replace('/', DIRECTORY_SEPARATOR, $namespaceData->getAbsoluteDirectory());
-                $_namespace = substr_replace($namespace, $namespaceBaseDir, 0, strlen($namespaceData->getNamespace()));
-                $_result = rtrim($projectRootDirectory, '\\/') . DIRECTORY_SEPARATOR . $_namespace;
+                $count = 1;
+                $_namespace = str_replace($namespaceData->getNamespace() . '\\', '', $namespace, $count);
+                $_result = rtrim($namespaceBaseDir, '\\/') . DIRECTORY_SEPARATOR . $_namespace;
                 // This covers the case when the namespace defined in autoload-dev is not a subset of any namespace defined in autoload.
                 if (empty($match)) {
                     $result = $_result;
